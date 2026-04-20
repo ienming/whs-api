@@ -3,11 +3,11 @@ import { supabase } from "../config/supabase.js";
 export const fetchAndFormatGraph = async () => {
     const [nodesResult, linksResult] = await Promise.all([
         supabase.from('sites').select('id, name, category'),
-        supabase.from('site_links').select('source_id, target_id')
+        supabase.from('site_links').select('source_id, target_id, strength'),
     ]);
 
-    if (nodesResult.error) throw new Error(nodesResult.error);
-    if (linksResult.error) throw new Error(linksResult.error);
+    if (nodesResult.error) throw new Error(nodesResult.error.message);
+    if (linksResult.error) throw new Error(linksResult.error.message);
 
     const d3Data = {
         nodes: nodesResult.data.map(node => ({

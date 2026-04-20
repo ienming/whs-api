@@ -1,11 +1,13 @@
-export const sendSuccessResponse = (response, data, status = 200) => {
+import type { Response } from 'express';
+
+export const sendSuccessResponse = <T>(response: Response, data: T, status = 200) => {
     return response.status(status).json({
         status: 'success',
         data
     });
 }
 
-export const sendErrorResponse = (response, error, customMessage = 'An unexpected error occurred', status = 500) => {
+export const sendErrorResponse = (response: Response, error: Error, customMessage = 'An unexpected error occurred', status = 500) => {
     console.error(`[${new Date().toISOString()}] ${customMessage}:`, error);
     return response.status(status).json({
         status: 'error',
