@@ -1,9 +1,10 @@
 import { supabase } from "../config/supabase.js";
 
 export const fetchAndFormatGraph = async () => {
+    const MAX_LIMIT = 50;
     const [nodesResult, linksResult] = await Promise.all([
-        supabase.from('sites').select('id, name, category'),
-        supabase.from('site_links').select('source_id, target_id, strength'),
+        supabase.from('sites').select('id_no, name_en, category, desc_en').limit(MAX_LIMIT),
+        supabase.from('site_links').select('source_id, target_id, strength').limit(MAX_LIMIT),
     ]);
 
     if (nodesResult.error) throw new Error(nodesResult.error.message);
@@ -11,8 +12,9 @@ export const fetchAndFormatGraph = async () => {
 
     const d3Data = {
         nodes: nodesResult.data.map(node => ({
-            id: node.id,
-            name: node.name,
+            id: node.id_no,
+            name_en: node.name_en,
+            desc_en: node.desc_en,
             category: node.category,
         })),
         links: linksResult.data.map(link => ({
